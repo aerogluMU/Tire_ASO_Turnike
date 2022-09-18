@@ -42,13 +42,29 @@ def insert_cus(cus):
     with conn:
         c.execute("INSERT INTO customers VALUES (:first, :last, :cardID, 0)", {'first':cus.firstName,'last':cus.lastName,'cardID':cus.cardID})
 
-def get_cus_by_name(lastName):
-    c.execute("SELECT * FROM customers WHERE lastName=:last",{'last':lastName})
+def get_cus_by_name(firstName,lastName):
+    c.execute("SELECT * FROM customers WHERE firstName=:first AND lastName=:last",{'first':firstName, 'last':lastName})
     return c.fetchall()
 
-def update_count(cus):
+def get_cus_by_name(cardID):
+    c.execute("SELECT * FROM customers WHERE cardID=:cardID",{'cardID':cardID})
+    return c.fetchall()
+
+def countUsed(cus):
     with conn:
-        c.execute("SELECT * FROM customers WHERE lastName=:last",{'last':lastName})
+        c.execute("UPDATE customers SET count=0 WHERE cardID=:cardID",{'cardID':cus.cardID})
+
+def countReflesh(cus):
+    with conn:
+        c.execute("UPDATE customers SET count=1 WHERE cardID=:cardID",{'cardID':cus.cardID})
+
+def update_cardID(cus,newCardID):
+    with conn:
+        c.execute("UPDATE customers SET cardID=:cardID WHERE firstName=:first AND lastName=:last",{'cardID':newCardID,'first':cus.firstName, 'last':cus.lastName})
+
+def remove_by_cardID(cus):
+    with conn:
+        c.execute("DELETE from customers WHERE cardID=:cardID",{'cardID':cus.cardID})
 
 
 ''' 
