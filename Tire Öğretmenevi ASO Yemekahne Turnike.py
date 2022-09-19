@@ -4,10 +4,13 @@
 *
 '''
 
+from threading import Thread
+import threading
 import serial.tools.list_ports
 import serial
 import sqlite3
 from customer import Customer
+import threading
 
 ''' 
 *
@@ -26,56 +29,90 @@ def listandSelectPorts():
     for port, desc, hwis in sorted(ports):
             print("{} | {}".format(port, desc))
 
-def readID():
-    rxbuf = ""
-    while 1:
-        res = ser.read().decode("utf-8")
-        if(res != '\n'):
-            rxbuf += res
-        else:
-            print(rxbuf)
-            break
-
 # DATABASE FUNCTIONS
 
 def insert_cus(cus):
+    conn = sqlite3.connect('customer.db')
+    c = conn.cursor()
     with conn:
         c.execute("INSERT INTO customers VALUES (:first, :last, :cardID, 0)", {'first':cus.firstName,'last':cus.lastName,'cardID':cus.cardID})
+    conn.close()
 
 def get_cus_by_name(firstName,lastName):
+    conn = sqlite3.connect('customer.db')
+    c = conn.cursor()
     c.execute("SELECT * FROM customers WHERE firstName=:first AND lastName=:last",{'first':firstName, 'last':lastName})
+    conn.close()
     return c.fetchall()
 
 def get_cus_by_name(cardID):
+    conn = sqlite3.connect('customer.db')
+    c = conn.cursor()
     c.execute("SELECT * FROM customers WHERE cardID=:cardID",{'cardID':cardID})
-    return c.fetchall()
+    conn.close()
+    return c.fetchone()
 
-def countUsed(cus):
+def countUsed(cardID):
+    conn = sqlite3.connect('customer.db')
+    c = conn.cursor()
     with conn:
-        c.execute("UPDATE customers SET count=0 WHERE cardID=:cardID",{'cardID':cus.cardID})
+        c.execute("UPDATE customers SET count=0 WHERE cardID=:cardID",{'cardID':cardID})
+    conn.close()
 
-def countReflesh(cus):
+def countReflesh(cardID):
+    conn = sqlite3.connect('customer.db')
+    c = conn.cursor()
     with conn:
-        c.execute("UPDATE customers SET count=1 WHERE cardID=:cardID",{'cardID':cus.cardID})
+        c.execute("UPDATE customers SET count=1 WHERE cardID=:cardID",{'cardID':cardID})
+    conn.close()
 
 def update_cardID(cus,newCardID):
+    conn = sqlite3.connect('customer.db')
+    c = conn.cursor()
     with conn:
         c.execute("UPDATE customers SET cardID=:cardID WHERE firstName=:first AND lastName=:last",{'cardID':newCardID,'first':cus.firstName, 'last':cus.lastName})
+    conn.close()
 
 def remove_by_cardID(cus):
+    conn = sqlite3.connect('customer.db')
+    c = conn.cursor()
     with conn:
         c.execute("DELETE from customers WHERE cardID=:cardID",{'cardID':cus.cardID})
+    conn.close()
 
+# THREAD FUNCTIONS
+
+def Thread1():
+    while 1:
+        rxbuf = ""
+        while 1:
+            res = ser.read().decode("utf-8")
+            if(res != '\n'):
+                rxbuf += res
+            else:
+                print(">> ID: " + rxbuf)
+                break
+
+def Thread2():
+    while 1:
+        choose = input()
+        if choose == "ekle":
+            first = input("Ad: ")
+            last = input("SoyAd: ")
+            cardid = input("cardId: ")
+            cus = Customer(firstName=first,lastName=last,cardID=cardid)
+            insert_cus(cus)
+        elif choose == "sil":
+            cardid = input("cardId: ")
+            cus = get_cus_by_name(cardid)
+            remove_by_cardID(cus)
+            
 
 ''' 
 *
 * MAIN
 *
 '''
-
-conn = sqlite3.connect('customer.db')
-
-c = conn.cursor()
 
 # c.execute("""CREATE TABLE customers (
 #             firstName text,
@@ -85,13 +122,12 @@ c = conn.cursor()
 #             )""")
 
 
-conn.close()
-
 listandSelectPorts()
 com=input('>> Select COM Port: COM')
 ser = serial.Serial(port='COM%d' % (int(com)), baudrate = 9600,  bytesize=8, parity='N', stopbits=1, timeout=None, xonxoff=0)
 print("-------------------------------------------------------")
-while 1:
-    readID()
 
-
+thread1 = threading.Thread(target=Thread1)
+thread1.start()
+thread2 = threading.Thread(target=Thread2)
+thread2.start()
