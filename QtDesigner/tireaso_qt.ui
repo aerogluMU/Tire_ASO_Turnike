@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>801</width>
-    <height>305</height>
+    <height>395</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Tire Öğretmenevi ASO Yemekhane Turnike</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="label">
@@ -75,6 +75,24 @@
       <height>22</height>
      </rect>
     </property>
+    <property name="currentIndex">
+     <number>-1</number>
+    </property>
+    <item>
+     <property name="text">
+      <string>Kamu</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Öğrenci</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Kamu Dışı</string>
+     </property>
+    </item>
    </widget>
    <widget class="QLineEdit" name="lne_first">
     <property name="geometry">
@@ -119,7 +137,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Oku</string>
+     <string>Tara</string>
     </property>
    </widget>
    <widget class="QTableWidget" name="tableWidget">
@@ -365,6 +383,24 @@
       <height>22</height>
      </rect>
     </property>
+    <property name="currentIndex">
+     <number>-1</number>
+    </property>
+    <item>
+     <property name="text">
+      <string>Kamu</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Öğrenci</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Kamu Dışı</string>
+     </property>
+    </item>
    </widget>
    <widget class="QPushButton" name="btn_filter">
     <property name="geometry">
@@ -389,7 +425,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Ürün Ekle</string>
+     <string>Müşteri Ekle</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_remove">
@@ -402,7 +438,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Ürün Sil</string>
+     <string>Müşteri Sil</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_update">
@@ -415,12 +451,12 @@
      </rect>
     </property>
     <property name="text">
-     <string>Ürün Güncelle</string>
+     <string>Müşteri Güncelle</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_unfilter">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -434,6 +470,53 @@
      <string>Hepsini Listele</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="btn_update_count">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>220</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Yemek Hakkını Yenile</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_getSelected">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>220</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Seçili Müşteriyi Getir</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_startTurnike">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>260</y>
+      <width>341</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="text">
+     <string>Turnike Denetimini Başlat</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -444,8 +527,20 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuCihazlar">
+    <property name="title">
+     <string>Cihazlar</string>
+    </property>
+    <addaction name="addCom"/>
+   </widget>
+   <addaction name="menuCihazlar"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="addCom">
+   <property name="text">
+    <string>Cihaz Ekle</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
